@@ -14,7 +14,6 @@ class Config:
     result_backend = 'django-db'
     beat_max_loop_interval = 600
     result_cache_max = 1000
-    # worker_concurrency = 4
     task_compression = 'gzip'
     result_compression = 'gzip'
     task_default_queue = 'low'
