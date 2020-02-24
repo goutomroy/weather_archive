@@ -11,3 +11,6 @@ Weather Archive files are CSV files that contain the following fields:
 - windDirection (string) - direction label of prevailing wind, such as N, NE, NNE, etc
 
 The Archive File [data/weather_archive.csv](../data/weather_archive.csv) contains 100 weather observations that you can use to test your function with.
+
+#### Solution
+`docker-compose run web python manage.py parse_csv`
