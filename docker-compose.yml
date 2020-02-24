@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+
+  redis:
+    container_name: 'weather_redis'
+    image: 'redis:latest'
+    restart: on-failure
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - 'redisdata:/data'
+
+  postgres:
+    container_name: 'weather_postgresql'
+    image: postgres:12.1-alpine
+    restart: on-failure
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=goutom
+      - POSTGRES_PASSWORD=weather
+      - POSTGRES_DB=weather
+
+  worker:
+    image: weather:0.0.1
+    hostname: worker
+    build: .
+    command: celery -A weather worker -l INFO
+    restart: on-failure
+    volumes:
+      - .:/code/
+    depends_on:
+      - postgres
+      - redis
+
+  web:
+    container_name: 'weather_web'
+    build: .
+    restart: on-failure
+    volumes:
+      - .:/code/
+    command: sh -c './manage.py migrate && echo yes | ./manage.py collectstatic && ./manage.py runserver 0.0.0.0:8000'
+    ports:
+      - 8000:8000
+    env_file:
+      - app.env
+    depends_on:
+      - postgres
+      - redis
+
+
+volumes:
+  postgres_data:
+  redisdata:
