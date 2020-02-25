@@ -1,6 +1,8 @@
 import logging
 from rest_framework import viewsets
-from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.parsers import MultiPartParser
+from rest_framework.renderers import JSONRenderer
+
 from apps.archive.models import Archive, Observation
 from apps.archive.paginations import StandardResultsSetPagination
 from apps.archive.serializers import ArchiveSerializer, ObservationSerializer

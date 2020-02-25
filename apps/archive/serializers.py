@@ -11,8 +11,7 @@ class ObservationSerializer(DynamicModelSerializer):
 class ArchiveSerializer(DynamicModelSerializer):
     class Meta:
         model = Archive
-        # fields = "__all__"
-        exclude = ['observations']
+        fields = "__all__"
 
     @staticmethod
     def get_upload_fields():

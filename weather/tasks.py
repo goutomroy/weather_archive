@@ -1,6 +1,8 @@
 import csv
 import datetime
 import logging
+from django.db import transaction, DatabaseError
+
 from weather.celery import app
 
 logger = logging.getLogger(__name__)
@@ -31,12 +33,15 @@ def process_archive(self, archive_id):
                 d.humidity = int(row[4])
                 d.windSpeed = int(row[5])
                 d.windDirection = row[6]
-                d.save()
                 observations.append(d)
+        try:
+            with transaction.atomic():
+                Observation.objects.bulk_create(observations)
+                archive.status = StatusTypes.COMPLETE
+                archive.save()
+        except DatabaseError:
+            raise Exception
 
-        archive.observations.add(*observations)
-        archive.status = StatusTypes.COMPLETE
-        archive.save()
     except Exception as exc:
         logger.error(exc)
         archive.status = StatusTypes.FAILURE

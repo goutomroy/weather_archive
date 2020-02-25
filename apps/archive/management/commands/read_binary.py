@@ -1,0 +1,39 @@
+import base64
+import datetime
+import logging
+import os
+import csv
+import pathlib
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+
+logger = logging.getLogger(__name__)
+
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        file_path = os.path.join(settings.BASE_DIR, 'data/weather_archive.bin')
+
+        columns = []
+
+        # with open(file_path, "rb") as file:
+        #     callable = lambda: file.read(1024)
+        #     sentinel = bytes()  # or b''
+        #     for chunk in iter(callable, sentinel):
+        #         for byte in chunk:
+        #             print(byte)
+
+        # for byte in pathlib.Path(file_path).read_bytes():
+        #     columns.append(byte)
+
+        from functools import partial
+        with open(file_path, 'rb') as file:
+            for byte in iter(partial(file.read, 13), b''):
+                # columns.append(byte.decode("utf-8", errors="ignore"))
+                columns.append(byte)
+
+        logger.info(columns)
+        logger.info(f'file_path : {file_path}')
+        logger.info(f'number of rows : {len(columns)}')

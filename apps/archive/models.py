@@ -34,7 +34,6 @@ class Observation(models.Model):
 class Archive(models.Model):
     file = models.FileField(upload_to='archive/%Y/%m/%d/', validators=[FileExtensionValidator(allowed_extensions=['csv'])])
     status = models.PositiveSmallIntegerField(default=StatusTypes.PENDING, choices=StatusTypes.choices())
-    observations = models.ManyToManyField(Observation, blank=True)
     created = models.DateField(help_text=_("Archive creation date.",), auto_now_add=True, editable=False)
 
     def __str__(self):
