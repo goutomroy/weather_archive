@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-
 from weather import tasks
 
 
@@ -19,10 +18,23 @@ class StatusTypes(IntEnum):
         return [(key.value, key.name) for key in cls]
 
 
+class Observation(models.Model):
+    date = models.DateField(help_text=_("Observation date.", ))
+    temperature = models.FloatField()
+    rainfall = models.FloatField()
+    barometricPressure = models.FloatField()
+    humidity = models.IntegerField()
+    windSpeed = models.IntegerField()
+    windDirection = models.CharField(max_length=3)
+
+    def __str__(self):
+        return f"{self.date}->{self.temperature}"
+
+
 class Archive(models.Model):
-    file = models.FileField(upload_to='archive/%Y/%m/%d/',
-                                    validators=[FileExtensionValidator(allowed_extensions=['csv'])])
+    file = models.FileField(upload_to='archive/%Y/%m/%d/', validators=[FileExtensionValidator(allowed_extensions=['csv'])])
     status = models.PositiveSmallIntegerField(default=StatusTypes.PENDING, choices=StatusTypes.choices())
+    observations = models.ManyToManyField(Observation, blank=True)
     created = models.DateField(help_text=_("Archive creation date.",), auto_now_add=True, editable=False)
 
     def __str__(self):

@@ -1,17 +1,24 @@
 import logging
 from rest_framework import viewsets
-from rest_framework.parsers import FileUploadParser
-from apps.archive.models import Archive
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+from apps.archive.models import Archive, Observation
 from apps.archive.paginations import StandardResultsSetPagination
-from apps.archive.serializers import ArchiveSerializer
+from apps.archive.serializers import ArchiveSerializer, ObservationSerializer
 
 logger = logging.getLogger(__name__)
+
+
+class ObservationViewSet(viewsets.ReadOnlyModelViewSet):
+
+    serializer_class = ObservationSerializer
+    pagination_class = StandardResultsSetPagination
+    queryset = Observation.objects.all()
 
 
 class ArchiveViewSet(viewsets.ModelViewSet):
 
     serializer_class = ArchiveSerializer
-    parser_classes = [FileUploadParser]
+    parser_classes = (MultiPartParser,)
     pagination_class = StandardResultsSetPagination
     queryset = Archive.objects.all()
     allowed_http_methods = ('get', 'post')
