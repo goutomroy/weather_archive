@@ -166,6 +166,7 @@ logging.config.dictConfig(
                 'level': 'INFO',
                 'filters': ['require_debug_true'],
                 'class': 'logging.StreamHandler',
+                'formatter': 'default'
             },
             'django.server': {
                 'level': 'INFO',
