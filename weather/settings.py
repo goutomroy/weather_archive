@@ -17,19 +17,27 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_COMMON_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+ADDITIONAL_APPS = [
     'django_celery_results',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+]
+
+PROJECT_APPS = [
     'apps.archive',
 ]
+
+INSTALLED_APPS = DJANGO_COMMON_APPS + ADDITIONAL_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

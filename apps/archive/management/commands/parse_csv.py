@@ -14,11 +14,6 @@ class Command(BaseCommand):
         file_path = os.path.join(settings.BASE_DIR, 'data/weather_archive.csv')
 
         columns = []
-        # with open(file_path, newline='') as f:
-        #     reader = csv.DictReader(f)
-        #     for row in reader:
-        #         row_as_dict = {k: v for k, v in row.items()}
-        #         columns.append(row_as_dict)
 
         with open(file_path, newline='') as f:
             reader = csv.reader(f)
