@@ -1,9 +1,13 @@
 from enum import IntEnum
+
+from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from rest_framework.authtoken.models import Token
+
 from weather import tasks
 
 
@@ -38,6 +42,17 @@ class Archive(models.Model):
 
     def __str__(self):
         return self.file.name
+
+
+class Task(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, *args, **kwargs):
+    if kwargs.get('created', False):
+        Token.objects.get_or_create(user=kwargs.get('instance'))
 
 
 @receiver(post_save, sender=Archive)

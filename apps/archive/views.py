@@ -1,11 +1,11 @@
 import logging
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser
-from rest_framework.renderers import JSONRenderer
-
-from apps.archive.models import Archive, Observation
+from rest_framework.permissions import IsAuthenticated
+from apps.archive.models import Archive, Observation, Task
 from apps.archive.paginations import StandardResultsSetPagination
-from apps.archive.serializers import ArchiveSerializer, ObservationSerializer
+from apps.archive.permissions import IsOwner
+from apps.archive.serializers import ArchiveSerializer, ObservationSerializer, TaskSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +25,18 @@ class ArchiveViewSet(viewsets.ModelViewSet):
     queryset = Archive.objects.all()
     allowed_http_methods = ('get', 'post')
 
-    # def get_queryset(self):
-    #     return Archive.objects.all()
 
-    # @action(detail=False, methods=['post'])
-    # def upload(self, request):
-    #     file_serializer = ArchiveSerializer(data=request.data, context={"request": request})
-    #     if file_serializer.is_valid():
-    #         file_serializer.save()
-    #         return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-    #     else:
-    #         return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class TaskViewSet(viewsets.ModelViewSet):
+
+    serializer_class = TaskSerializer
+    pagination_class = StandardResultsSetPagination
+    queryset = Task.objects.all()
+
+    def get_permissions(self):
+        # only authenticated owner of task can update or delete.
+        if self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsOwner()]
+        else:
+            # any authenticated user can list, retrieve tasks.
+            return [IsAuthenticated()]
 

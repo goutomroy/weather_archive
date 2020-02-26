@@ -1,5 +1,15 @@
 from django.contrib import admin
-from apps.archive.models import Archive, Observation
+from apps.archive.models import Archive, Observation, Task
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
+
+
+class PermissionAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'codename', 'name', 'content_type']
+    readonly_fields = ['id']
+    list_filter = ['content_type']
+    list_display_links = ['id', 'codename']
 
 
 class ArchiveAdmin(admin.ModelAdmin):
@@ -18,5 +28,14 @@ class ObservationAdmin(admin.ModelAdmin):
     ordering = ['-date']
 
 
+class TaskAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'title', 'user']
+    readonly_fields = ['id']
+    list_display_links = ['id', 'title']
+
+
+admin.site.register(Permission, PermissionAdmin)
 admin.site.register(Archive, ArchiveAdmin)
 admin.site.register(Observation, ObservationAdmin)
+admin.site.register(Task, TaskAdmin)

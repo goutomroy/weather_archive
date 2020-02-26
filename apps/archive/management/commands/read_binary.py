@@ -4,6 +4,7 @@ import logging
 import os
 import csv
 import pathlib
+from struct import unpack
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -28,12 +29,23 @@ class Command(BaseCommand):
         # for byte in pathlib.Path(file_path).read_bytes():
         #     columns.append(byte)
 
+        # d['date'] = dt.astimezone(tz=None)
+        # d['temperature'] = float(row[1])
+        # d['rainfall'] = float(row[2])
+        # d['barometricPressure'] = float(row[3])
+        # d['humidity'] = int(row[4])
+        # d['windSpeed'] = int(row[5])
+        # d['windDirection'] = row[6]
+
         from functools import partial
         with open(file_path, 'rb') as file:
             for byte in iter(partial(file.read, 13), b''):
                 # columns.append(byte.decode("utf-8", errors="ignore"))
+                row_format = '4peeeBBB'
+                # buffer = unpack(row_format, byte)
+                # columns.append(buffer)
                 columns.append(byte)
-
         logger.info(columns)
+        logger.info(type(columns[0]))
         logger.info(f'file_path : {file_path}')
         logger.info(f'number of rows : {len(columns)}')

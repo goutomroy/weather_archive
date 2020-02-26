@@ -2,7 +2,6 @@ import csv
 import datetime
 import logging
 from django.db import transaction, DatabaseError
-
 from weather.celery import app
 
 logger = logging.getLogger(__name__)
