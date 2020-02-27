@@ -1,5 +1,4 @@
 from enum import IntEnum
-
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -7,8 +6,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from rest_framework.authtoken.models import Token
-
-from weather import tasks
 
 
 class StatusTypes(IntEnum):
@@ -59,5 +56,6 @@ def create_profile(sender, *args, **kwargs):
 def process_archive(sender, *args, **kwargs):
     if kwargs.get('created', False):
         archive = kwargs.get('instance')
+        from weather import tasks
         tasks.process_archive.apply_async([archive.id])
 

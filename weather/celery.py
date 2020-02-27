@@ -1,8 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 import os
-from celery.schedules import crontab
-from kombu import Exchange, Queue
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weather.settings')
@@ -29,4 +27,3 @@ class Config:
 
 app = Celery('weather')
 app.config_from_object(Config)
-# app.autodiscover_tasks()

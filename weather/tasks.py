@@ -3,14 +3,14 @@ import datetime
 import logging
 from django.db import transaction, DatabaseError
 from weather.celery import app
+from apps.archive.models import Archive, Observation
+from apps.archive.models import StatusTypes
 
 logger = logging.getLogger(__name__)
 
 
 @app.task(bind=True)
 def process_archive(self, archive_id):
-    from apps.archive.models import Archive, Observation
-    from apps.archive.models import StatusTypes
 
     try:
         archive = Archive.objects.get(id=int(archive_id))
@@ -33,13 +33,11 @@ def process_archive(self, archive_id):
                 d.windSpeed = int(row[5])
                 d.windDirection = row[6]
                 observations.append(d)
-        try:
-            with transaction.atomic():
-                Observation.objects.bulk_create(observations)
-                archive.status = StatusTypes.COMPLETE
-                archive.save()
-        except DatabaseError:
-            raise Exception
+
+        with transaction.atomic():
+            Observation.objects.bulk_create(observations)
+            archive.status = StatusTypes.COMPLETE
+            archive.save()
 
     except Exception as exc:
         logger.error(exc)

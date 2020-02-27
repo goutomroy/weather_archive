@@ -5,7 +5,6 @@ import os
 import csv
 import pathlib
 from struct import unpack
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -16,7 +15,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = os.path.join(settings.BASE_DIR, 'data/weather_archive.bin')
-
         columns = []
 
         # with open(file_path, "rb") as file:
@@ -37,15 +35,15 @@ class Command(BaseCommand):
         # d['windSpeed'] = int(row[5])
         # d['windDirection'] = row[6]
 
-        from functools import partial
-        with open(file_path, 'rb') as file:
-            for byte in iter(partial(file.read, 13), b''):
-                # columns.append(byte.decode("utf-8", errors="ignore"))
-                row_format = '4peeeBBB'
-                # buffer = unpack(row_format, byte)
-                # columns.append(buffer)
-                columns.append(byte)
-        logger.info(columns)
-        logger.info(type(columns[0]))
-        logger.info(f'file_path : {file_path}')
-        logger.info(f'number of rows : {len(columns)}')
+        # from functools import partial
+        # with open(file_path, 'rb') as file:
+        #     for byte in iter(partial(file.read, 13), b''):
+        #         # columns.append(byte.decode("utf-8", errors="ignore"))
+        #         row_format = '4peeeBBB'
+        #         # buffer = unpack(row_format, byte)
+        #         # columns.append(buffer)
+        #         columns.append(byte)
+        # logger.info(columns)
+        # logger.info(type(columns[0]))
+        # logger.info(f'file_path : {file_path}')
+        # logger.info(f'number of rows : {len(columns)}')

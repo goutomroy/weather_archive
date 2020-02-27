@@ -1,5 +1,9 @@
+import os
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
+from rest_framework import status
 from apps.archive.models import Task
 
 
@@ -19,4 +23,13 @@ class TestSetupClass(TestCase):
         self.client.force_login(bernard)
         uri = f"/task/{task.id}/"
         response = self.client.delete(uri)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_archive_file_upload(self):
+        file_path = os.path.join(settings.BASE_DIR, 'data/weather_archive.csv')
+        with open(file_path, 'rb') as fp:
+            file = SimpleUploadedFile('weather_archive.csv', fp.read())
+            response = self.client.post('/archive/', format='multipart', data={'file': file})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
