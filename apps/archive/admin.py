@@ -1,7 +1,6 @@
 from django.contrib import admin
 from apps.archive.models import Archive, Observation, Task
-from django.contrib.auth.models import User, Permission
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
 
 
 class PermissionAdmin(admin.ModelAdmin):

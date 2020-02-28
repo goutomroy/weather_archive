@@ -19,14 +19,9 @@ class Command(BaseCommand):
             for index, row in enumerate(list(reader)):
                 if index == 0:
                     continue
-                d = {}
-                d['date'] = datetime.datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S').astimezone(tz=None)
-                d['temperature'] = float(row[1])
-                d['rainfall'] = float(row[2])
-                d['barometricPressure'] = float(row[3])
-                d['humidity'] = int(row[4])
-                d['windSpeed'] = int(row[5])
-                d['windDirection'] = row[6]
+                d = {'date': datetime.datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S').astimezone(tz=None),
+                     'temperature': float(row[1]), 'rainfall': float(row[2]), 'barometricPressure': float(row[3]),
+                     'humidity': int(row[4]), 'windSpeed': int(row[5]), 'windDirection': row[6]}
                 columns.append(d)
 
         logger.info(columns)
