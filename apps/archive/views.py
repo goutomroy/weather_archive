@@ -43,3 +43,4 @@ class TaskViewSet(viewsets.ModelViewSet):
         else:
             return [IsAuthenticated()]
 
+

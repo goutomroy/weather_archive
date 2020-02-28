@@ -31,6 +31,7 @@ ADDITIONAL_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'guardian',
 ]
 
 PROJECT_APPS = [
@@ -48,6 +49,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 ROOT_URLCONF = 'weather.urls'
 
