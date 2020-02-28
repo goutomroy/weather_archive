@@ -1,4 +1,3 @@
-from guardian.shortcuts import assign_perm
 from rest_framework import fields, serializers
 from apps.archive.models import Archive, Observation, Task
 
