@@ -20,8 +20,7 @@ class Command(BaseCommand):
                 if index == 0:
                     continue
                 d = {}
-                dt = datetime.datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')
-                d['date'] = dt.astimezone(tz=None)
+                d['date'] = datetime.datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S').astimezone(tz=None)
                 d['temperature'] = float(row[1])
                 d['rainfall'] = float(row[2])
                 d['barometricPressure'] = float(row[3])
