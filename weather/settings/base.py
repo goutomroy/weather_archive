@@ -1,8 +1,7 @@
-import logging.config
 import environ
 import os
 
-BASE_DIR = environ.Path(__file__) - 2
+BASE_DIR = environ.Path(__file__) - 3
 env = environ.Env()
 # reading .app.env file
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, 'app.env'))
@@ -55,15 +54,6 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-REST_FRAMEWORK = {
-
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    )
-}
-
 ROOT_URLCONF = 'weather.urls'
 
 TEMPLATES = [
@@ -95,6 +85,7 @@ DATABASES = {
     'default': db_from_env
 }
 
+# Cache
 CACHES = {
     # read os.environ['CACHE_URL'] and raises ImproperlyConfigured exception if not found
     'default': env.cache('REDIS_URL')
@@ -143,73 +134,4 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Disable Django's logging setup
-LOGGING_CONFIG = None
-logging.config.dictConfig(
-    {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'filters': {
-            'require_debug_false': {
-                '()': 'django.utils.log.RequireDebugFalse',
-            },
-            'require_debug_true': {
-                '()': 'django.utils.log.RequireDebugTrue',
-            },
-        },
-        'formatters': {
-            'default': {
-                # exact format is not important, this is the minimum information
-                'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-            },
-            'django.server': {
-                '()': 'django.utils.log.ServerFormatter',
-                'format': '[{server_time}] {message}',
-                'style': '{',
-            }
-        },
-        'handlers': {
-            'console': {
-                'level': 'INFO',
-                'filters': ['require_debug_true'],
-                'class': 'logging.StreamHandler',
-                'formatter': 'default'
-            },
-            'django.server': {
-                'level': 'INFO',
-                'class': 'logging.StreamHandler',
-                'formatter': 'django.server',
-            },
-            'mail_admins': {
-                'level': 'ERROR',
-                'filters': ['require_debug_false'],
-                'class': 'django.utils.log.AdminEmailHandler'
-            }
-        },
-        'loggers': {
-            # Our application code
-            'apps': {
-                'level': 'INFO',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            # default for all undefined Python modules
-            '': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
 
-            # root logger for project
-            'django': {
-                'handlers': ['console', 'mail_admins'],
-                'level': 'INFO',
-            },
-            'django.server': {
-                'handlers': ['django.server'],
-                'level': 'INFO',
-                'propagate': False,
-            }
-        }
-    }
-)
