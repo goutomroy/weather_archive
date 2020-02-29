@@ -1,4 +1,5 @@
 from django.contrib import admin
+from guardian.admin import GuardedModelAdmin
 from apps.archive.models import Archive, Observation, Task
 from django.contrib.auth.models import Permission
 
@@ -27,7 +28,7 @@ class ObservationAdmin(admin.ModelAdmin):
     ordering = ['-date']
 
 
-class TaskAdmin(admin.ModelAdmin):
+class TaskAdmin(GuardedModelAdmin):
 
     list_display = ['id', 'title', 'user']
     readonly_fields = ['id']
@@ -38,3 +39,4 @@ admin.site.register(Permission, PermissionAdmin)
 admin.site.register(Archive, ArchiveAdmin)
 admin.site.register(Observation, ObservationAdmin)
 admin.site.register(Task, TaskAdmin)
+# admin.site.register(Token)
