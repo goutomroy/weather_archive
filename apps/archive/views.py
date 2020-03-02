@@ -1,10 +1,9 @@
 import logging
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import DjangoObjectPermissions
 from apps.archive.models import Archive, Observation, Task
 from apps.archive.paginations import StandardResultsSetPagination
-from apps.archive.permissions import IsTaskOwner
 from apps.archive.serializers import ArchiveSerializer, ObservationSerializer, TaskSerializer
 
 logger = logging.getLogger(__name__)
@@ -29,18 +28,17 @@ class ArchiveViewSet(viewsets.ModelViewSet):
 class TaskViewSet(viewsets.ModelViewSet):
 
     """
-    Only authenticated owner of task can update or delete.
-    Any authenticated user can list, retrieve tasks.
+    * Anyone can list, view the task
+    * Admin : Group - managers ->  change, view on task
+    * Admin : Group - employees ->  add, change, view, delete on task
+    * Api view : Manager can change(only done status) and view task
+    * Api view : Employees can add(only title), view, change(only title, only owner can) and delete(only owner can) task
     """
 
     serializer_class = TaskSerializer
     pagination_class = StandardResultsSetPagination
     queryset = Task.objects.all()
+    permission_classes = [DjangoObjectPermissions]
 
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticated(), IsTaskOwner()]
-        else:
-            return [IsAuthenticated()]
 
 

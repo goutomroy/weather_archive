@@ -32,3 +32,13 @@ Using Test is not required, but is preferred.
 
 ## Celery
 The docker-compose.yml file already defines a worker service for running a celery worker. If you choose to use this worker for testing, note that **celery workers do not auto-reload** upon code changes.
+
+## How to run
+* docker-compose up
+* docker-compose run web python manage.py loaddata fixtures.json
+* Admin : username: goutom pass: 123456
+* Other user pass: mdpps123
+* docker-compose run web python manage.py test
+* [Log in to admin](http://127.0.0.1:8000/admin/)
+* [Check api](http://127.0.0.1:8000/)
+* Ask developer for `app.env`

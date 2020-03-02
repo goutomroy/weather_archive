@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from guardian.shortcuts import assign_perm
 from rest_framework.authtoken.models import Token
 
 
@@ -43,11 +42,9 @@ class Archive(models.Model):
 
 
 class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
-
-    class Meta:
-        permissions = (('change_delete_task', 'Change or delete task'), )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    done = models.BooleanField(default=False)
 
 
 @receiver(post_save, sender=User)

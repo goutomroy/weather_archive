@@ -30,7 +30,7 @@ class ObservationAdmin(admin.ModelAdmin):
 
 class TaskAdmin(GuardedModelAdmin):
 
-    list_display = ['id', 'title', 'user']
+    list_display = ['id', 'title', 'user', 'done']
     readonly_fields = ['id']
     list_display_links = ['id', 'title']
 
