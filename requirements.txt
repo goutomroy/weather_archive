@@ -14,7 +14,7 @@ django-environ==0.4.5
 django-filter==2.2.0
 django-guardian==2.2.0
 django-redis==4.11.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 djangorestframework-guardian==0.3.0
 drf-yasg==1.17.1
 idna==2.9
